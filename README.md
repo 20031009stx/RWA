@@ -1,37 +1,36 @@
 # RWA
-Leasing mode for real-world asset integration in next-generation communication networks.
 
-## Supplementary experiments
+Supplementary experiments for real-world asset integration in next-generation communication networks.
 
-| Figure | What it examines |
+| PDF | Experiment |
 | --- | --- |
-| [Capital liquidity](capital_liquidity.pdf) | Cumulative net cash return over time: leasing, RWA fractional purchase, and direct whole-block purchase. |
-| [Allocation ablation](ablation_allocation.pdf) | Allocation granularity, pricing, and coupled funding/initial-price sensitivity. |
-| [Robustness ablation](ablation_robustness.pdf) | Supply withholding, buyer limit-price reduction, and settlement protection. |
+| [Capital liquidity](capital_liquidity.pdf) | Time-dependent net cash returns under limited initial funding. |
+| [Granularity self-ablation](ablation_allocation.pdf) | The reported RWA curve and two lower-token variants. |
+| [Security self-ablation](ablation_robustness.pdf) | RWA with/without AMM pricing or on-chain payment enforcement. |
+| [Leasing notes](Supplementary%20Notes%20for%20Leasing%20Mode.pdf), [leasing figure](leasing.pdf) | Existing resource-reuse and cumulative user-satisfaction experiment. |
 
-### Capital liquidity: time and cash returns
+## Capital liquidity
 
-This single-panel figure is a deterministic firm cash-flow scenario. A whole resource costs 100 normalized units; the firm requires 30% of it, starts with 10 units, and accumulates 3 units per epoch from its existing business. Once access starts, the required capacity generates 5 units per epoch before access costs. Leasing costs 3 units per epoch; RWA fractional purchase costs 30; whole-block purchase costs 100. Unused whole-block capacity generates no additional revenue.
+The firm needs 30% of a resource costing 100 normalized units. It starts with 10 units, accumulates 3 per epoch from existing business, and earns 5 per epoch once the required capacity is available. Leasing costs 3 per epoch; fractional purchase costs 30 and whole-block purchase costs 100. Unused whole-block capacity produces no extra income.
 
-The plotted return is resource-generated operating cash minus purchase outlays or recurring rent. Background savings determine affordability but are excluded from returns. A downward purchase jump is the full acquisition payment, not a negative company cash balance. The strategies do not switch between renting and buying; asset residual values, resale and token appreciation are excluded.
+Returns deduct acquisition payments or recurring rent. Background savings determine purchase timing but are excluded from returns; residual asset value and rent-to-buy switching are also excluded. Purchase costs cause the downward jumps. Fractional and whole-block purchases start at epochs 6.67 and 30 and overtake leasing at 21.11 and 83.33. These are deterministic scenario results; lower rent or slower savings can move crossings beyond the observation window.
 
-In this scenario, fractional and whole-block purchases start at epochs 6.67 and 30, and overtake leasing at 21.11 and 83.33. Leasing helps early access; fractional purchase reduces the funding delay; recurring rent can outweigh purchasing over a sufficiently long horizon. These are conditional cash-flow results, not market-calibrated return forecasts. Lower rent or slower capital accumulation can delay the intersections beyond the observation window.
+## RWA self-ablations
 
-### What "Ask-price matching" means
+The new experiments extend the agents and constant-product pricing in `RWA.py`, with consistent inventory and payment accounting. There are 100 sellers with 1–5 resources each. New points average 10 paired seeds with 95% bootstrap intervals over 100 epochs. Physical supply, demand and cash budgets are shared within each comparison. Original pool/LP balances provide pricing reserves; only recorded seller inventory can be delivered.
 
-Previously labeled "Quote", this is a simplified mechanism replacement for AMM pricing. Buyers are processed in a shared arrival order; sellers are considered from lowest to highest ask. Trades respect available inventory, lot size, buyer budgets and the value of the requested bandwidth. It is not MPRA, TRA, CPA, or a new named auction algorithm.
+**Granularity.** The blue curve retains the reported data from the paper's plotting source: 48%, 85%, 99%, 100%, 100% at 100–300 buyers. The other curves are new runs with 10 and 3 tokens per resource, versus the original code's 30-token setting. The initial whole-resource price remains 30, so initial token prices are 1, 3 and 10. Physical demand and buyer budgets are unchanged; coarse variants trade whole tokens. Local controls rerun the 30-token model both with and without integer lots.
 
-The AMM instead prices trades using a finite constant-product pool. Both mechanisms receive the same real inventory and initial cash; matching leaves that cash idle. Sellers precommit offered inventory. These are controlled component variants, not reproductions of the paper's complete implementations.
+The metric follows the original allocation driver: fully sold resource blocks divided by initial blocks, averaged over the last ten epochs. Liquidity providers number `max(20, buyers/2)`. Both coarse variants reach 100% in these settings; coarsening does not uniformly slow this metric. Large budgets and the whole-block completion criterion explain why a slower rise is not guaranteed. The reported curve is historical and allowed fractional token trades; it is not a fresh paired sample.
 
-### Reading the ablation figures
+**Security.** All panels use 200 buyers, 100 liquidity providers, 30 tokens per resource and 0–30% malicious participants. The common metric is final **paid resource allocation / initial physical capacity**; unpaid occupancy is excluded.
 
-These two figures use 100 sellers, 100–300 buyers (200 in attack tests), 30 paired seeds and 95% bootstrap confidence intervals. All variants share physical supply, demand, budgets and attack identities. A block is 10 MHz; fine allocation uses 0.1 MHz slices.
+- **Seller collusion:** compare full RWA with RWA without AMM. Malicious sellers raise asks by 1.2–1.5 times and reduce their listing rate to 30%; this slows release rather than permanently deleting capacity.
+- **Buyer collusion:** compare the same AMM switch. Malicious buyers lower bids to 60–80% and spending per step to 30%. Without AMM, the same RWA tokens trade when bids cover asks, at their midpoint price. AMM quotes follow reserves instead of submitted prices; both variants share the volume reductions.
+- **Payment default:** keep AMM and switch on-chain enforcement. Malicious buyers attempt nonpayment with probability 0.5. Enforcement prelocks 10% of initial buyer cash, recovers payment from collateral, adds a 10% trade-value penalty and excludes the defaulter; insufficient collateral rejects delivery. Without enforcement, unpaid delivery can occur and is not counted as successful allocation.
 
-- **Allocation (a):** compare coarse and fine lots within each mechanism. Demand-serving utilization counts allocated bandwidth up to each buyer's actual need; excess whole-block capacity is excluded.
-- **Allocation (b):** show the fine-lot gain within each mechanism, the AMM-minus-matching difference at the same fine granularity, and their interaction (the difference between fine-lot gains). The measured interaction does not support positive integration synergy in this model.
-- **Allocation (c):** vary initial cash while keeping inventory and buyer budgets fixed. This changes the AMM's initial price as well as funding, so it is not an isolated liquidity-depth test.
-- **Robustness (a):** malicious sellers withhold 70% of their coalition's supply, rounded to whole blocks; initial cash remains fixed.
-- **Robustness (b):** malicious buyers reduce their limit prices to 70%. A flat curve means the remaining demand can still absorb supply in this scenario, not immunity to arbitrary collusion.
-- **Robustness (c):** malicious buyers attempt nonpayment with probability 0.5. Settlement-on rejects unpaid delivery; settlement-off permits it. Paid demand-serving utilization excludes unpaid allocation and distinguishes successful exchange from resource occupancy.
+Detection and executable collateral are modeled assumptions, not a live-contract or consensus-security test. The curves identify component effects for these attacks and parameters.
 
-The ablations identify component effects under the modeled conditions; they do not establish universal integration gains, live-contract security, or secondary-market resale liquidity.
+## Leasing experiment
+
+The existing calibrated resource-release simulation uses 100 sellers, 200 buyers and 100 epochs, averaged over five service-order runs. Leases last 5–10 epochs before resources become available again. Reported cumulative satisfaction reaches 98.2% for leasing versus 70.4% for RWA purchase. This illustrates resource recirculation; satisfaction, resource utilization and net cash returns are different metrics.
