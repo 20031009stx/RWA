@@ -17,7 +17,7 @@ Returns deduct acquisition payments or recurring rent. Background savings determ
 
 ## RWA self-ablations
 
-The new experiments extend the agents and constant-product pricing in `RWA.py`, with consistent inventory and payment accounting. There are 100 sellers with 1–5 resources each. New points average 10 paired seeds with 95% bootstrap intervals over 100 epochs. Physical supply, demand and cash budgets are shared within each comparison. Original pool/LP balances provide pricing reserves; only recorded seller inventory can be delivered.
+The new experiments extend the agents and constant-product pricing in `RWA.py`, with consistent inventory and payment accounting. There are 100 sellers with 1–5 resources each. New points average 10 paired seeds over 100 epochs; 95% bootstrap intervals are retained with the local results. Security bars display means without error bars, following the main figure's presentation. Physical supply, demand and cash budgets are shared within each comparison. Original pool/LP balances provide pricing reserves; only recorded seller inventory can be delivered.
 
 **Granularity.** The blue curve retains the reported data from the paper's plotting source: 48%, 85%, 99%, 100%, 100% at 100–300 buyers. The other curves are new runs with 10 and 3 tokens per resource, versus the original code's 30-token setting. The initial whole-resource price remains 30, so initial token prices are 1, 3 and 10. Physical demand and buyer budgets are unchanged; coarse variants trade whole tokens. Local controls rerun the 30-token model both with and without integer lots.
 
