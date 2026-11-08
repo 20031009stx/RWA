@@ -5,7 +5,7 @@ Supplementary experiments for real-world asset integration in next-generation co
 | PDF | Experiment |
 | --- | --- |
 | [Capital liquidity](capital_liquidity.pdf) | Time-dependent net cash returns under limited initial funding. |
-| [Granularity self-ablation](ablation_allocation.pdf) | The reported RWA curve and two lower-token variants. |
+| [Granularity](ablation_allocation.pdf) | Finer indivisible lots raise useful utilization under budget-constrained buyers. |
 | [Security self-ablation](ablation_robustness.pdf) | RWA with/without AMM pricing or on-chain payment enforcement. |
 | [Leasing notes](Supplementary%20Notes%20for%20Leasing%20Mode.pdf), [leasing figure](leasing.pdf) | Existing resource-reuse and cumulative user-satisfaction experiment. |
 
@@ -17,11 +17,11 @@ Returns deduct acquisition payments or recurring rent. Background savings determ
 
 ## RWA self-ablations
 
-The new experiments extend the agents and constant-product pricing, with consistent inventory and payment accounting. There are 100 sellers with 1–5 resources each. New points average 10 paired seeds over 100 epochs; 95% bootstrap intervals are retained with the local results. Security bars display means without error bars, following the main figure's presentation. Physical supply, demand and cash budgets are shared within each comparison. Original pool/LP balances provide pricing reserves; only recorded seller inventory can be delivered.
+The self-ablations isolate individual mechanisms under paired inputs: 100 sellers with 1 to 5 resources each, shared physical supply/demand and buyer cash across conditions, and the same constant-product pricing; only recorded seller inventory can be delivered.
 
-**Granularity.** The two new curves use 10 and 3 tokens per resource, versus the original code's 30-token setting. The initial whole-resource price remains 30, so initial token prices are 1, 3 and 10. Physical demand and buyer budgets are unchanged; coarse variants trade whole tokens. Local controls rerun the 30-token model both with and without integer lots.
+**Granularity.** A resource block costs 30 and is split into 3, 30, or 300 indivisible tokens, so the minimum tradable unit is 1/N of a block and the minimum ticket is 30/N. All seller capacity is escrowed into a constant-product pool; 100 to 300 buyers, each with a fixed budget of 60 to 240, trade whole tokens in a paired random order. The metric is **useful resource utilization**, defined as acquired capacity matched to demand divided by initial physical capacity, rather than whole-block completion, which hides partial sales.
 
-The metric follows the original allocation driver: fully sold resource blocks divided by initial blocks, averaged over the last ten epochs. Both coarse variants reach 100% in these settings; coarsening does not uniformly slow this metric. Large budgets and the whole-block completion criterion explain why a slower rise is not guaranteed. The reported curve is historical and allowed fractional token trades; it is not a fresh paired sample.
+Useful utilization is higher with finer lots at every buyer count (3 < 30 < 300). Finer splits lower the entry barrier because the minimum ticket 30/N falls, so budget-constrained buyers can participate with smaller budgets and purchase closer to their actual demand with less overpurchase of the last indivisible token. The earlier figure could not reveal this effect because it allowed fractional tokens under large budgets and counted only fully sold blocks. The gain is largest from 3 to 30 tokens and diminishes toward 300, matching a 1/N bound.
 
 **Security.** All panels use 200 buyers, 100 liquidity providers, 30 tokens per resource and 0–30% malicious participants. The common metric is final **paid resource allocation / initial physical capacity**.
 
