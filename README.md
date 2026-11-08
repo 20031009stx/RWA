@@ -21,7 +21,7 @@ The self-ablations isolate individual mechanisms under paired inputs: 100 seller
 
 **Granularity.** A resource block costs 30 and is split into 3, 30, or 300 indivisible tokens, so the minimum tradable unit is 1/N of a block and the minimum ticket is 30/N. All seller capacity is escrowed into a constant-product pool; 100 to 300 buyers, each with a fixed budget of 60 to 240, trade whole tokens in a paired random order. The metric is **useful resource utilization**, defined as acquired capacity matched to demand divided by initial physical capacity, rather than whole-block completion, which hides partial sales.
 
-Useful utilization is higher with finer lots at every buyer count (3 < 30 < 300). Finer splits lower the entry barrier because the minimum ticket 30/N falls, so budget-constrained buyers can participate with smaller budgets and purchase closer to their actual demand with less overpurchase of the last indivisible token. 为了突出细粒度的影响，我们的配置和原文略有不同。
+Useful utilization is higher with finer lots at every buyer count (3 < 30 < 300). Finer splits lower the entry barrier because the minimum ticket 30/N falls, so budget-constrained buyers can participate with smaller budgets and purchase closer to their actual demand with less overpurchase of the last indivisible token. To highlight the effect of fine granularity, our configuration differs slightly from the original.
 
 **Security.** All panels use 200 buyers, 100 liquidity providers, 30 tokens per resource and 0–30% malicious participants. The common metric is final **paid resource allocation / initial physical capacity**.
 
