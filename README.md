@@ -4,16 +4,9 @@ Supplementary experiments for real-world asset integration in next-generation co
 
 | PDF | Experiment |
 | --- | --- |
-| [Capital liquidity](capital_liquidity.pdf) | Time-dependent net cash returns under limited initial funding. |
 | [Granularity](ablation_allocation.pdf) | Finer indivisible lots raise useful utilization under budget-constrained buyers. |
 | [Security self-ablation](ablation_robustness.pdf) | RWA with/without AMM pricing or on-chain payment enforcement. |
 | [Leasing notes](Supplementary%20Notes%20for%20Leasing%20Mode.pdf), [leasing figure](leasing.pdf) | Existing resource-reuse and cumulative user-satisfaction experiment. |
-
-## Capital liquidity
-
-The firm needs 30% of a resource costing 100 normalized units. It starts with 10 units, accumulates 3 per epoch from existing business, and earns 5 per epoch once the required capacity is available. Leasing costs 3 per epoch; fractional purchase costs 30 and whole-block purchase costs 100. Unused whole-block capacity produces no extra income.
-
-Returns deduct acquisition payments or recurring rent. Background savings determine purchase timing but are excluded from returns; residual asset value and rent-to-buy switching are also excluded. Purchase costs cause the downward jumps. Fractional and whole-block purchases start at epochs 6.67 and 30 and overtake leasing at 21.11 and 83.33.
 
 ## RWA self-ablations
 
